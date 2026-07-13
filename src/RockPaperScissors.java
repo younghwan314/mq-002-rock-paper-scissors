@@ -20,8 +20,22 @@ public class RockPaperScissors {
 		// 사용자 입력 받기
 		System.out.print("가위/바위/보 중 하나를 입력하세요: ");
 		String userChoice = scanner.nextLine();
-		System.out.println("사용자 선택: " + userChoice);
-		System.out.println("컴퓨터 선택: " + computerChoice);
 		scanner.close();
+
+		// 무승패 판정
+		if (userChoice.equals(computerChoice)) {
+			System.out.println("무승부입니다.");
+
+		} else if ((userChoice.equals("가위") && computerChoice.equals("보")) ||
+			       (userChoice.equals("바위") && computerChoice.equals("가위")) ||
+			       (userChoice.equals("보") && computerChoice.equals("바위"))) {
+			System.out.println("승리입니다.");
+
+		} else {
+			System.out.println("패배입니다.");
+		}
+		// 결과 출력
+		System.out.println("컴퓨터: " + computerChoice);
+		System.out.println("유저: " + userChoice);
 	}
 }
