@@ -26,13 +26,13 @@ public class RockPaperScissors {
 			int userScore = 0;
 			int computerScore = 0;
 
-			// 승점 2점을 먼저 얻기까지 반복
+			// 목표 승점을 먼저 얻을 때까지 반복
 			while (userScore < winningScore && computerScore < winningScore) {
 				// 가위/바위/보 랜덤 선택
-				int randomIntWithin3 = random.nextInt(3);
+				int randomIndex = random.nextInt(rps.length);
 
 				// 랜덤 정수를 가위/바위/보로 변환
-				String computerChoice = rps[randomIntWithin3];
+				String computerChoice = rps[randomIndex];
 
 				// 사용자 입력 받기
 				System.out.print("가위/바위/보 중 하나를 입력하세요: ");
@@ -72,7 +72,7 @@ public class RockPaperScissors {
 			System.out.println("============ 최종 결과 ============");
 			System.out.println("유저 점수: " + userScore);
 			System.out.println("컴퓨터 점수: " + computerScore);
-			System.out.println("");
+			System.out.println();
 
 			if (userScore == winningScore) {
 				System.out.println("유저가 최종 승리했습니다.");
