@@ -43,3 +43,4 @@ If the game reads console input, running it through Gradle requires adding the `
 ## Git 규칙
 - 커밋과 푸시는 반드시 내 확인을 받은 뒤 실행한다
 - 커밋 메시지는 "feat/fix/refactor/docs/test: 한국어 설명" 형식으로 작성한다
+- 기능은 main에서 직접 작업하지 않는다. 기능마다 `feature/기능이름` 브랜치를 만들어 작업하고, GitHub Pull Request로 main에 머지한다
