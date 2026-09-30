@@ -34,3 +34,24 @@
 - 문자열 값은 인자 타입(int, enum 등)으로 자동 변환된다. 쉼표가 들어간 값은 작은따옴표로 감싼다(`'가위, 바위'`), `''`는 빈 문자열이다.
 - 다른 소스: `@ValueSource`(인자 하나짜리 값 목록), `@EnumSource`(enum 상수 전체), `@MethodSource`(메서드가 만든 값), `@CsvFileSource`(CSV 파일).
 - `junit-jupiter-params` 모듈에 들어 있고, build.gradle의 `junit-jupiter`에 포함돼 있어 따로 추가할 필요가 없다.
+
+## 2026-09-30
+
+### Q. 익명 클래스는 무엇인가?
+- 이름 없이, 선언과 동시에 객체를 하나 만드는 클래스. `new 부모타입() { 재정의할 메서드 }` 형태로 쓴다.
+- `ComputerPlayerTest`에서는 `Random`을 상속하고 `nextInt`만 재정의해서, 항상 정해진 숫자를 돌려주는 가짜 `Random`을 만들었다.
+- 따로 `class FixedRandom extends Random { ... }`을 만드는 것과 같지만, 한 곳에서 한 번만 쓸 때 짧게 쓸 수 있다.
+- 바깥의 지역 변수(`fixedNumber`)를 안에서 쓸 수 있다. 단, 그 변수는 값을 바꾸지 않아야 한다(effectively final).
+- 람다식과 비교: 람다는 추상 메서드가 하나뿐인 인터페이스(함수형 인터페이스)에만 쓸 수 있다. `Random`은 클래스라 람다로 대신할 수 없어 익명 클래스를 썼다.
+
+### Q. `Random`의 seed(시드)는 무엇인가?
+- `Random`은 진짜 무작위가 아니라, 시작값(seed)에서 정해진 계산으로 수를 만들어 내는 의사 난수(pseudo-random) 생성기다.
+- 같은 seed로 만든 `Random`은 항상 똑같은 순서의 수를 낸다. 실제로 `new Random(42)`를 두 번 만들어 `nextInt(3)`을 10번씩 뽑으면 둘 다 `2 0 0 2 0 1 2 2 1 2`가 나왔다.
+- `new Random()`처럼 seed를 주지 않으면 매번 다른 seed가 자동으로 정해져 실행할 때마다 결과가 달라진다. 실제 게임에는 이것을 쓴다.
+- 테스트에서 seed를 고정하면 결과가 항상 같아서, 실행할 때마다 통과/실패가 바뀌는 불안정한 테스트를 막을 수 있다. 42라는 숫자 자체에 의미는 없다.
+
+### Q. `EnumSet`은 무엇인가?
+- enum 전용 `Set`. `Set`이라 중복을 허용하지 않고, 같은 값을 여러 번 넣어도 한 번만 들어간다.
+- `EnumSet.noneOf(Hand.class)`: 빈 집합, `EnumSet.allOf(Hand.class)`: 모든 상수가 든 집합, `EnumSet.of(Hand.ROCK, Hand.PAPER)`: 지정한 상수만 든 집합.
+- 내부적으로 비트로 저장해서 `HashSet`보다 빠르고 메모리를 덜 쓴다. 순회하면 enum 선언 순서대로 나온다.
+- 테스트에서는 100번 고른 손을 모아 중복을 없애고, `allOf`와 같은지 비교해 세 손이 모두 나왔는지 확인했다. `Set`끼리의 `equals`는 순서와 관계없이 담긴 원소가 같은지 비교한다.
