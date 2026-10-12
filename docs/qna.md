@@ -55,3 +55,14 @@
 - `EnumSet.noneOf(Hand.class)`: 빈 집합, `EnumSet.allOf(Hand.class)`: 모든 상수가 든 집합, `EnumSet.of(Hand.ROCK, Hand.PAPER)`: 지정한 상수만 든 집합.
 - 내부적으로 비트로 저장해서 `HashSet`보다 빠르고 메모리를 덜 쓴다. 순회하면 enum 선언 순서대로 나온다.
 - 테스트에서는 100번 고른 손을 모아 중복을 없애고, `allOf`와 같은지 비교해 세 손이 모두 나왔는지 확인했다. `Set`끼리의 `equals`는 순서와 관계없이 담긴 원소가 같은지 비교한다.
+
+## 2026-10-12
+
+### Q. `Optional`은 무엇인가?
+- 값이 "있을 수도, 없을 수도 있다"를 타입으로 표현하는 상자(Java 8~). `InputParser.parse`는 올바른 입력이면 손이 든 상자, 잘못된 입력이면 빈 상자를 돌려준다.
+- 만들기: `Optional.of(값)`(값이 반드시 있을 때), `Optional.empty()`(빈 상자), `Optional.ofNullable(값)`(null이면 빈 상자).
+- 확인: `isPresent()`(값 있음), `isEmpty()`(값 없음, Java 11~).
+- 꺼내기: `orElse(기본값)`, `orElseThrow()`(없으면 예외), `ifPresent(값 -> ...)`(있을 때만 실행), `ifPresentOrElse(...)`(있을 때/없을 때 각각 실행), `map(...)`(안의 값을 변환). `get()`은 빈 상자에서 호출하면 예외가 나므로 확인 없이 쓰지 않는다.
+- `null` 대신 쓰는 이유: 반환 타입만 봐도 값이 없을 수 있다는 게 드러나고, 꺼내려면 "없을 때"를 처리하는 코드를 쓰게 돼 `NullPointerException`을 줄인다.
+- 주의: 주로 메서드 반환 타입에만 쓴다. 필드나 매개변수 타입으로는 쓰지 않는 게 관례이고, `Optional` 변수 자체에 `null`을 넣지 않는다.
+- `Optional`끼리 `equals`로 비교하면 안의 값을 비교한다. 그래서 테스트에서 `assertEquals(Optional.of(expected), parser.parse(input))`가 동작한다.
